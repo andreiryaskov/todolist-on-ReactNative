@@ -2,6 +2,7 @@ import {FlatList, ListRenderItem, Pressable, StyleSheet, Text, TextInput, Toucha
 import {useState} from "react";
 import {CARD, CONTENT, PADDING, RADIUS, TEXT, WIDTH} from "./const";
 import {RemoveIcon} from "./icons/Remove";
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 
 type TaskType = {
@@ -36,23 +37,39 @@ const Main = () => {
     ])
     const [value, setValue] = useState('')
 
+    const renderLeftActions = () => {
+        return (
+                <Text>renderLeftActions</Text>
+            )
+
+    }
+
+    const renderRightActions = () => {
+        return (
+            <Text>renderRightActions</Text>
+        )
+    }
+
     const render: ListRenderItem<TaskType> = ({item}) => {
         return (
-            <View style={styles.item}>
-                <View style={styles.box}>
-                    <Text style={styles.title}>{item.title}</Text>
-                    <Text style={styles.check}
-                          onPress={() => updateStatus(item.id)}>{item.isDone ? 'true' : 'false'}</Text>
-                    {/*<Text onPress={() => removeTask(item.id)}>X</Text>*/}
+            <Swipeable renderLeftActions={renderLeftActions}
+                       renderRightActions={renderRightActions}
+                       onSwipeableRightOpen={() => removeTask(item.id)}
+            >
+                <View style={styles.item}>
+                    <View style={styles.box}>
+                        <Text style={styles.title}>{item.title}</Text>
+                        <Text style={styles.check}
+                              onPress={() => updateStatus(item.id)}>{item.isDone ? 'true' : 'false'}</Text>
+                        {/*<Text onPress={() => removeTask(item.id)}>X</Text>*/}
+                    </View>
+                    <View>
+                        <Pressable onPress={() => removeTask(item.id)}>
+                            <RemoveIcon/>
+                        </Pressable>
+                    </View>
                 </View>
-                <View>
-                    <Pressable onPress={() => removeTask(item.id)}>
-                        <RemoveIcon />
-                    </Pressable>
-                </View>
-
-
-            </View>
+            </Swipeable>
         )
     }
 
